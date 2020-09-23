@@ -4,9 +4,16 @@ import { Socket } from 'socket.io';
 import { EncuestaData } from '../classes/encuesta';
 import { GraficaData } from '../classes/grafica';
 import Server from '../classes/server';
-import { usuariosConectados } from '../sockets/socket';
+import { usuariosConectados, mapa } from '../sockets/socket';
 
 const router = Router();
+
+router.get('/mapa', ( req: Request, res: Response ) => {
+    res.json( mapa.getMarcadores() );
+});
+
+
+// Graficas y encuesta
 
 const grafica = new GraficaData();
 const encuesta = new EncuestaData();
