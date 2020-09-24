@@ -3,24 +3,47 @@ import { Mapa } from '../classes/mapa';
 import { Marcador } from '../classes/marcador';
 import { Usuario } from '../classes/usuario';
 import { UsuariosLista } from '../classes/usuarios-lista';
+import { mapa } from '../routes/router';
+
+// googlemaps sockets
+export const marcadorNuevo = ( cliente: Socket, io: SocketIO.Server ) => {
+    cliente.on('marcador-nuevo', (marcador) => {
+        mapa.agregarMarcador(marcador);
+        cliente.broadcast.emit('marcador-nuevo', marcador);
+    });
+}
+
+export const marcadorBorrar = ( cliente: Socket, io: SocketIO.Server ) => {
+    cliente.on('marcador-nuevo', (id: string) => {
+        mapa.borrarMarcador(id);
+        cliente.broadcast.emit('marcador-borrar', id);
+    });
+}
+
+export const marcadorMover = ( cliente: Socket, io: SocketIO.Server ) => {
+    cliente.on('marcador-nuevo', (marcador) => {
+        mapa.moverMarcador(marcador);   
+        cliente.broadcast.emit('marcador-mover', marcador   );
+    });
+}
 
 export const usuariosConectados = new UsuariosLista();
-export const mapa = new Mapa();
+export const mapaMB = new Mapa();
 
 // eventos de mapbox
 export const mapaSockets = ( cliente: Socket, io: SocketIO.Server ) => {
     cliente.on( 'marcador-nuevo', (marcador: Marcador) => {
-        mapa.agregarMarcador( marcador );
+        mapaMB.agregarMarcador( marcador );
         cliente.broadcast.emit( 'marcador-nuevo', marcador );
     });
 
     cliente.on( 'marcador-mover', ( marcador: Marcador ) => {
-        mapa.moverMarcador( marcador );
+        mapaMB.moverMarcador( marcador );
         cliente.broadcast.emit( 'marcador-mover', marcador );
     });
 
     cliente.on( 'marcador-borrar', ( id: string ) => {
-        mapa.borrarMarcador( id );
+        mapaMB.borrarMarcador( id );
         cliente.broadcast.emit( 'marcador-borrar', id );
     });
 }

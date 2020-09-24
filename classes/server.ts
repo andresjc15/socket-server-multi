@@ -36,6 +36,11 @@ export default class Server {
 
         this.io.on('connection', cliente => {
 
+            // google maps
+            socket.marcadorNuevo(cliente, this.io);
+            socket.marcadorBorrar(cliente, this.io);
+            socket.marcadorMover(cliente, this.io);
+
             //Conectar cliente
             socket.conectarCliente( cliente, this.io );
 

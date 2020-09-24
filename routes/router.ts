@@ -3,10 +3,41 @@ import { Router, Request, Response } from 'express';
 import { Socket } from 'socket.io';
 import { EncuestaData } from '../classes/encuesta';
 import { GraficaData } from '../classes/grafica';
+import { Mapa } from '../classes/googlemaps/mapa';
 import Server from '../classes/server';
-import { usuariosConectados, mapa } from '../sockets/socket';
+import { usuariosConectados } from '../sockets/socket';
 
 const router = Router();
+
+export const mapa = new Mapa();
+const lugares = [
+    {
+        id: '1',
+        nombre: 'Udemy',
+        lat: 37.784679,
+        lng: -122.395936
+    },
+    {
+        id: '2',
+        nombre: 'Bahía de San Francisco',
+        lat: 37.798933,
+        lng: -122.377732
+    },
+    {
+        id: '3',
+        nombre: 'The Palace Hotel',
+        lat: 37.788578,
+        lng: -122.401745
+    }
+];
+
+mapa.marcadores.push( ...lugares );
+
+router.get('/mapasgoogle', ( req: Request, res: Response ) => {
+    res.json( mapa.getMarcadores() );
+});
+
+// Sockets mapbox
 
 router.get('/mapa', ( req: Request, res: Response ) => {
     res.json( mapa.getMarcadores() );
